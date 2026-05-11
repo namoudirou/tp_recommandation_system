@@ -109,7 +109,7 @@ if st.button("Générer les recommandations", type="secondary"):
         df_vus.index += 1
 
         df_vus["Note"] = df_vus["Note"].apply(lambda n: "⭐" * int(n))
-        st.dataframe(df_vus[["Film", "Note", "Note ⭐"]])
+        st.dataframe(df_vus[["Film", "Note", "Note"]])
 
     with col_droite:
         st.subheader(f"Top-{n_recommandations} recommandations")
