@@ -1,6 +1,6 @@
 """
 app.py - Interface Streamlit du système de recommandation
-
+==========================================================
 Pour lancer l'application :
     streamlit run app.py
 
@@ -14,7 +14,7 @@ import numpy as np
 
 from data import get_ratings_matrix
 from recommender import (
-    calcule_similarite_items,
+    calculer_similarite_items,
     recommander_top_n,
     get_films_similaires
 )
@@ -35,15 +35,15 @@ st.markdown("""
 
 @st.cache_data
 def charger_donnees():
-
+   
     df_notes      = get_ratings_matrix()
-    df_similarite = calcule_similarite_items(df_notes)
+    df_similarite = calculer_similarite_items(df_notes)
     return df_notes, df_similarite
 
 df_notes, df_similarite = charger_donnees()
 
 
-with st.expander("Voir la matrice de notes (utilisateurs × films)", expanded=False):
+with st.expander("📊 Voir la matrice de notes (utilisateurs × films)", expanded=False):
     st.markdown("Les **0** signifient que l'utilisateur n'a pas noté ce film.")
 
     def colorier_notes(val):
@@ -56,16 +56,19 @@ with st.expander("Voir la matrice de notes (utilisateurs × films)", expanded=Fa
         else:
             return "background-color: #f8d7da" 
 
-    st.dataframe(df_notes.style.map(colorier_notes))
+    st.dataframe(df_notes.style.applymap(colorier_notes))
 
 with st.expander("Voir la matrice de similarité cosinus (films × films)", expanded=False):
     st.markdown("""
     Chaque cellule indique à quel point deux films sont similaires (de 0 à 1).
     Plus la valeur est proche de 1, plus les utilisateurs les ont notés de manière similaire.
     """)
+
+    # On arrondit pour la lisibilité
     st.dataframe(
         df_similarite.round(3).style.background_gradient(cmap="Blues", vmin=0, vmax=1)
     )
+
 
 st.divider()
 st.header("Recommandations personnalisées")
@@ -93,6 +96,7 @@ with col3:
         help="Combien de films similaires utiliser pour prédire la note ?"
     )
 
+
 if st.button("Générer les recommandations", type="secondary"):
 
     notes_user = df_notes.loc[utilisateur_choisi]
@@ -108,8 +112,8 @@ if st.button("Générer les recommandations", type="secondary"):
         }).reset_index(drop=True)
         df_vus.index += 1
 
-        df_vus["Note"] = df_vus["Note"].apply(lambda n: "⭐" * int(n))
-        st.dataframe(df_vus[["Film", "Note", "Note"]])
+        df_vus["Note ⭐"] = df_vus["Note"].apply(lambda n: "⭐" * int(n))
+        st.dataframe(df_vus[["Film", "Note", "Note ⭐"]])
 
     with col_droite:
         st.subheader(f"Top-{n_recommandations} recommandations")
@@ -159,4 +163,3 @@ with col_a:
 with col_b:
     st.markdown("**Similarité cosinus**")
     st.bar_chart(df_sim.set_index("Film similaire")["Similarité"])
-
