@@ -14,7 +14,7 @@ import numpy as np
 
 from data import get_ratings_matrix
 from recommender import (
-    calculer_similarite_items,
+    calcule_similarite_items,
     recommander_top_n,
     get_films_similaires
 )
@@ -37,7 +37,7 @@ st.markdown("""
 def charger_donnees():
    
     df_notes      = get_ratings_matrix()
-    df_similarite = calculer_similarite_items(df_notes)
+    df_similarite = calcule_similarite_items(df_notes)
     return df_notes, df_similarite
 
 df_notes, df_similarite = charger_donnees()
