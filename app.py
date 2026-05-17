@@ -56,7 +56,7 @@ with st.expander("📊 Voir la matrice de notes (utilisateurs × films)", expand
         else:
             return "background-color: #f8d7da" 
 
-    st.dataframe(df_notes.style.applymap(colorier_notes))
+    st.dataframe(df_notes.style.map(colorier_notes))
 
 with st.expander("Voir la matrice de similarité cosinus (films × films)", expanded=False):
     st.markdown("""
